@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "focus_ingest"
+version = "0.1.0"
+description = "FOCUS CSV ingestion service to convert data to partitioned Parquet"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Axia Flow", email = "info@axiaflow.com"}
+]
+keywords = ["csv", "parquet", "focus", "data-engineering"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+dependencies = [
+    "pyarrow>=21.0.0",
+    "fsspec>=2025.9.0",
+    "typer>=0.19.2",
+    "python-dateutil>=2.9.0",
+    "pydantic>=2.11.9",
+    "tzdata",
+    "duckdb>=1.4.0",
+    "pyyaml>=6.0.2",
+    "pandas>=2.3.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=3.0.0",
+    "black>=22.1.0",
+    "isort>=5.10.1",
+    "mypy>=0.931",
+]
+cloud = [
+    "s3fs>=2022.1.0",
+    "adlfs>=2022.1.0",
+]
+
+[project.scripts]
+focus-ingest = "FocusIngestor.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+FocusIngestor = ["duckdb_views/*.sql"]
+
+[tool.black]
+line-length = 100
+target-version = ["py38"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true

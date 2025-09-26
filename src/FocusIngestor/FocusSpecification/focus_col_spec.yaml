@@ -1,0 +1,499 @@
+column "Availability Zone"
+- id: AvailabilityZone
+- display name: Availability Zone
+- description: A provider-assigned identifier for a physically separated and isolated area within a Region that provides high availability and fault tolerance.
+- feature level: Recommended
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "Billed Cost"
+- id: BilledCost
+- display name: Billed Cost
+- description: A charge serving as the basis for invoicing, inclusive of all reduced rates and discounts while excluding the amortization of upfront charges (one-time or recurring).
+- feature level: Mandatory
+- column type: Metric
+- allows nulls: False
+- data type: Decimal
+- value format: Numeric Format
+
+column "Billing Account ID"
+- id: BillingAccountId
+- display name: Billing Account ID
+- description: The identifier assigned to a billing account by the provider.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: False
+- data type: String
+- value format: <not specified>
+
+column "Billing Account Name"
+- id: BillingAccountName
+- display name: Billing Account Name
+- description: The display name assigned to a billing account.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "Billing Currency"
+- id: BillingCurrency
+- display name: Billing Currency
+- description: Represents the currency that a charge was billed in.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: False
+- data type: String
+- value format: Currency Code Format
+
+column "Billing Period End"
+- id: BillingPeriodEnd
+- display name: Billing Period End
+- description: The exclusive end date and time of a billing period.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: False
+- data type: Date/Time
+- value format: Date/Time Format
+
+column "Billing Period Start"
+- id: BillingPeriodStart
+- display name: Billing Period Start
+- description: The inclusive start date and time of a billing period.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: False
+- data type: Date/Time
+- value format: Date/Time Format
+
+column "Capacity Reservation ID"
+- id: CapacityReservationId
+- display name: Capacity Reservation ID
+- description: The identifier assigned to a capacity reservation by the provider.
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "Capacity Reservation Status"
+- id: CapacityReservationStatus
+- display name: Capacity Reservation Status
+- description: Indicates whether the charge represents either the consumption of a capacity reservation or when a capacity reservation is unused.
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: Allowed values
+
+column "Charge Category"
+- id: ChargeCategory
+- display name: Charge Category
+- description: Represents the highest-level classification of a charge based on the nature of how it is billed.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: False
+- data type: String
+- value format: Allowed values
+
+column "Charge Class"
+- id: ChargeClass
+- display name: Charge Class
+- description: Indicates whether the row represents a correction to a previously invoiced billing period.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: Allowed values
+
+column "Charge Description"
+- id: ChargeDescription
+- display name: Charge Description
+- description: Self-contained summary of the charge's purpose and price.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "Charge Frequency"
+- id: ChargeFrequency
+- display name: Charge Frequency
+- description: Indicates how often a charge will occur.
+- feature level: Recommended
+- column type: Dimension
+- allows nulls: False
+- data type: String
+- value format: Allowed values
+
+column "Charge Period End"
+- id: ChargePeriodEnd
+- display name: Charge Period End
+- description: The exclusive end date and time of a charge period.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: False
+- data type: Date/Time
+- value format: Date/Time Format
+
+column "Charge Period Start"
+- id: ChargePeriodStart
+- display name: Charge Period Start
+- description: The inclusive start date and time within a charge period.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: False
+- data type: Date/Time
+- value format: Date/Time Format
+
+column "Commitment Discount Category"
+- id: CommitmentDiscountCategory
+- display name: Commitment Discount Category
+- description: Indicates whether the commitment discount identified in the CommitmentDiscountId column is based on usage quantity or cost (aka "spend").
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: Allowed values
+
+column "Commitment Discount ID"
+- id: CommitmentDiscountId
+- display name: Commitment Discount ID
+- description: The identifier assigned to a commitment discount by the provider.
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "Commitment Discount Name"
+- id: CommitmentDiscountName
+- display name: Commitment Discount Name
+- description: The display name assigned to a commitment discount.
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "Commitment Discount Quantity"
+- id: CommitmentDiscountQuantity
+- display name: Commitment Discount Quantity
+- description: The amount of a commitment discount purchased or accounted for in commitment discount related rows that is denominated in Commitment Discount Units.
+- feature level: Conditional
+- column type: Metric
+- allows nulls: True
+- data type: Decimal
+- value format: Numeric Format
+
+column "Commitment Discount Status"
+- id: CommitmentDiscountStatus
+- display name: Commitment Discount Status
+- description: Indicates whether the charge corresponds with the consumption of a commitment discount or the unused portion of the committed amount.
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: Allowed values
+
+column "Commitment Discount Type"
+- id: CommitmentDiscountType
+- display name: Commitment Discount Type
+- description: A provider-assigned identifier for the type of commitment discount applied to the row.
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "Commitment Discount Unit"
+- id: CommitmentDiscountUnit
+- display name: Commitment Discount Unit
+- description: The provider-specified measurement unit indicating how a provider measures the Commitment Discount Quantity of a commitment discount.
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: Unit Format
+
+column "Consumed Quantity"
+- id: ConsumedQuantity
+- display name: Consumed Quantity
+- description: The volume of a metered SKU associated with a resource or service used, based on the Consumed Unit.
+- feature level: Conditional
+- column type: Metric
+- allows nulls: True
+- data type: Decimal
+- value format: Numeric Format
+
+column "Consumed Unit"
+- id: ConsumedUnit
+- display name: Consumed Unit
+- description: Provider-specified measurement unit indicating how a provider measures usage of a metered SKU associated with a resource or service.
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: Unit Format
+
+column "Contracted Cost"
+- id: ContractedCost
+- display name: Contracted Cost
+- description: Cost calculated by multiplying contracted unit price and the corresponding Pricing Quantity.
+- feature level: Mandatory
+- column type: Metric
+- allows nulls: False
+- data type: Decimal
+- value format: Numeric Format
+
+column "Contracted Unit Price"
+- id: ContractedUnitPrice
+- display name: Contracted Unit Price
+- description: The agreed-upon unit price for a single Pricing Unit of the associated SKU, inclusive of negotiated discounts, if present, while excluding negotiated commitment discounts or any other discounts.
+- feature level: Conditional
+- column type: Metric
+- allows nulls: True
+- data type: Decimal
+- value format: Numeric Format
+
+column "Effective Cost"
+- id: EffectiveCost
+- display name: Effective Cost
+- description: The amortized cost of the charge after applying all reduced rates, discounts, and the applicable portion of relevant, prepaid purchases (one-time or recurring) that covered this charge.
+- feature level: Mandatory
+- column type: Metric
+- allows nulls: False
+- data type: Decimal
+- value format: Numeric Format
+
+column "Invoice Issuer"
+- id: InvoiceIssuerName
+- display name: Invoice Issuer
+- description: The name of the entity responsible for invoicing for the resources or services consumed.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: False
+- data type: String
+- value format: <not specified>
+
+column "List Cost"
+- id: ListCost
+- display name: List Cost
+- description: Cost calculated by multiplying List Unit Price and the corresponding Pricing Quantity.
+- feature level: Mandatory
+- column type: Metric
+- allows nulls: False
+- data type: Decimal
+- value format: Numeric Format
+
+column "List Unit Price"
+- id: ListUnitPrice
+- display name: List Unit Price
+- description: The suggested provider-published unit price for a single Pricing Unit of the associated SKU, exclusive of any discounts.
+- feature level: Conditional
+- column type: Metric
+- allows nulls: True
+- data type: Decimal
+- value format: Numeric Format
+
+column "Pricing Category"
+- id: PricingCategory
+- display name: Pricing Category
+- description: Describes the pricing model used for a charge at the time of use or purchase.
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: Allowed values
+
+column "Pricing Quantity"
+- id: PricingQuantity
+- display name: Pricing Quantity
+- description: The volume of a given SKU associated with a resource or service used or purchased, based on the Pricing Unit.
+- feature level: Mandatory
+- column type: Metric
+- allows nulls: True
+- data type: Decimal
+- value format: Numeric Format
+
+column "Pricing Unit"
+- id: PricingUnit
+- display name: Pricing Unit
+- description: Provider-specified measurement unit for determining unit prices, indicating how the provider rates measured usage and purchase quantities after applying pricing rules like block pricing.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: Unit Format
+
+column "Provider"
+- id: ProviderName
+- display name: Provider
+- description: The name of the entity that made the resources or services available for purchase.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: False
+- data type: String
+- value format: <not specified>
+
+column "Publisher"
+- id: PublisherName
+- display name: Publisher
+- description: The name of the entity that produced the resources or services that were purchased.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: False
+- data type: String
+- value format: <not specified>
+
+column "Region ID"
+- id: RegionId
+- display name: Region ID
+- description: Provider-assigned identifier for an isolated geographic area where a resource is provisioned or a service is provided.
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "Region Name"
+- id: RegionName
+- display name: Region Name
+- description: The name of an isolated geographic area where a resource is provisioned or a service is provided.
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "Resource ID"
+- id: ResourceId
+- display name: Resource ID
+- description: Identifier assigned to a resource by the provider.
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "Resource Name"
+- id: ResourceName
+- display name: Resource Name
+- description: Display name assigned to a resource.
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "Resource Type"
+- id: ResourceType
+- display name: Resource Type
+- description: The kind of resource the charge applies to.
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "Service Category"
+- id: ServiceCategory
+- display name: Service Category
+- description: Highest-level classification of a service based on the core function of the service.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: False
+- data type: String
+- value format: Allowed values
+
+column "Service Name"
+- id: ServiceName
+- display name: Service Name
+- description: The provider-assigned name of a service.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: False
+- data type: String
+- value format: <not specified>
+
+column "Service Subcategory"
+- id: ServiceSubcategory
+- display name: Service Subcategory
+- description: A second-level classification of a service based on the more specific function or feature of the service.
+- feature level: Recommended
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "SKU ID"
+- id: SkuId
+- display name: SKU ID
+- description: Provider-assigned identifier for a stock-keeping unit (SKU).
+- feature level: Recommended
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "SKU Meter"
+- id: SkuMeter
+- display name: SKU Meter
+- description: Provider-assigned identifier that describes how usage of a SKU is measured.
+- feature level: Recommended
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "SKU Price Details"
+- id: SkuPriceDetails
+- display name: SKU Price Details
+- description: Additional details about pricing that may influence the unit price of the SKU.
+- feature level: Optional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "SKU Price ID"
+- id: SkuPriceId
+- display name: SKU Price ID
+- description: Provider-assigned identifier for a published SKU price.
+- feature level: Conditional
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "Sub Account ID"
+- id: SubAccountId
+- display name: Sub Account ID
+- description: The identifier assigned to a sub account by the provider.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: False
+- data type: String
+- value format: <not specified>
+
+column "Sub Account Name"
+- id: SubAccountName
+- display name: Sub Account Name
+- description: The display name assigned to a sub account.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: True
+- data type: String
+- value format: <not specified>
+
+column "Tags"
+- id: Tags
+- display name: Tags
+- description: Key-value pairs assigned to a resource or charge, typically used for allocation and categorization.
+- feature level: Mandatory
+- column type: Dimension
+- allows nulls: True
+- data type: JSON
+- value format: Key-Value Format

@@ -1,0 +1,7 @@
+{
+  "view_execution_order": [
+    "resources_per_day.sql",
+    "resources_per_day_json.sql",
+    "resource_daily_aggregated_state.sql"
+  ]
+}
