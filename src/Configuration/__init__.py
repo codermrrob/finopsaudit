@@ -1,5 +1,5 @@
 """
-Configuration module for the application.
+Initializes the Configuration package.
 
 This module provides centralized access to all application settings,
 constants, and configuration values across different domains.
@@ -15,7 +15,13 @@ from .DatabaseConfig import (
 )
 
 # Import from audit configuration
-from .AuditConfig import AuditConfig
+from .AuditConfig import (
+    AuditConfig,
+    AuditReportColumns,
+    ProtectSetColumns,
+    GluedNamesColumns,
+    CorpusRollupColumns,
+)
 
 # Import from agent configuration
 from .AgentConfig import AgentConfig, ModelProvider, ModelConfig, ResponseSchema
@@ -37,6 +43,10 @@ __all__ = [
     
     # Audit constants
     "AuditConfig",
+    "AuditReportColumns",
+    "ProtectSetColumns",
+    "GluedNamesColumns",
+    "CorpusRollupColumns",
     
     # Agent constants
     "AgentConfig",

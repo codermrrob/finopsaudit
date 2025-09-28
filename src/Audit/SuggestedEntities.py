@@ -5,7 +5,7 @@ from pathlib import Path
 import logging
 
 logger = logging.getLogger(__name__)
-from Configuration import ResourcesPerDayJsonColumns
+from Configuration import ResourcesPerDayJsonColumns, ProtectSetColumns
 
 class SuggestedEntities:
     """Generates a suggested entities YAML file from audit data."""
@@ -26,7 +26,7 @@ class SuggestedEntities:
 
         entities = []
         for _, row in self.protect_set_df.iterrows():
-            chunk = row['chunk']
+            chunk = row[ProtectSetColumns.CHUNK]
             found_in_chunks = self.phase_one_df[
                 self.phase_one_df[ResourcesPerDayJsonColumns.RESOURCE_NAME].str.contains(chunk, case=False, na=False)
             ][ResourcesPerDayJsonColumns.RESOURCE_NAME].unique().tolist()

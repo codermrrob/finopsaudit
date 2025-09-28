@@ -8,9 +8,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 class ConfigLoader:
-    def __init__(self, settings: AuditConfig):
-        self.settings = settings
-
+    def __init__(self):
+        pass
+    
     def load_exclusions(self, file_path: Union[str, Path]) -> set[str]:
         try:
             with open(file_path, 'r', encoding='utf-8') as f:

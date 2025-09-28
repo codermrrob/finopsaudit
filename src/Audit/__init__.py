@@ -8,5 +8,6 @@ from .AuditReadiness import AuditReadiness
 from .AuditPhaseOne import AuditPhaseOne
 from .AuditPhaseTwo import AuditPhaseTwo
 from .AuditInitialiser import AuditInitialiser
+from .ConfigLoader import ConfigLoader
 
-__all__ = ["AuditReadiness", "AuditPhaseOne", "AuditPhaseTwo", "AuditInitialiser"]
+__all__ = ["AuditReadiness", "AuditPhaseOne", "AuditPhaseTwo", "AuditInitialiser", "ConfigLoader"]

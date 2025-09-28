@@ -5,6 +5,7 @@ This module contains all constants used in the agent workflow.
 """
 from enum import Enum
 from pydantic import BaseModel
+from typing import Dict
 
 class ModelProvider(str, Enum):
     """Supported model providers."""
@@ -19,6 +20,13 @@ class ModelConfig(BaseModel):
     tokens_per_item: int
     overhead_tokens: int
 
+    @property
+    def recommended_batch_size(self) -> int:
+        """Calculate recommended batch size for this model."""
+        available_tokens = self.max_safe_tokens - self.overhead_tokens
+        return available_tokens // self.tokens_per_item if self.tokens_per_item > 0 else 0
+
+
 
 class AgentConfig:
     """Constants used in the agent workflow."""
@@ -28,7 +36,7 @@ class AgentConfig:
     """Path to the CSV file containing unique resource names for the agent to process."""
     AGENT_PROTECT_SET_PATH: str = 'protect_set_combined.2024_06.p2.csv'
     """Path to the protect set CSV file used by the agent's knowledge base."""
-    AGENT_OUTPUT_DIR: str = 'agent_outputs'
+    AGENT_OUTPUT_DIR: str = 'agent'
     """Directory to store the agent's output files."""
     AGENT_SUGGESTED_ENTITIES_PATH: str = 'suggested_entities.yml'
     """Path to the YAML file where the agent stores suggested entities."""
@@ -59,6 +67,32 @@ class AgentConfig:
     - For separate business functions, split into individual entities
     - Always respond only with the output data structure.
    """
+
+    MODEL_CONFIGS: Dict[ModelProvider, ModelConfig] = {
+        ModelProvider.GEMINI_FLASH: ModelConfig(
+            name=ModelProvider.GEMINI_FLASH,
+            max_safe_tokens=50_000, # Well below your 200k observation
+            tokens_per_item=20,      # ~5 input + ~15 output per item
+            overhead_tokens=500
+        ),
+        ModelProvider.GEMINI_PRO: ModelConfig(
+            name=ModelProvider.GEMINI_PRO,
+            max_safe_tokens=30_000,
+            tokens_per_item=20,
+            overhead_tokens=500
+        ),
+        ModelProvider.GPT4: ModelConfig(
+            name=ModelProvider.GPT4,
+            max_safe_tokens=6_000,
+            tokens_per_item=20,
+            overhead_tokens=500
+        ),
+    }
+
+    @classmethod
+    def get_model_config(cls, provider: ModelProvider) -> ModelConfig:
+        """Return the model configuration registered for the given provider."""
+        return cls.MODEL_CONFIGS[provider]
 
 
 class ResponseSchema:

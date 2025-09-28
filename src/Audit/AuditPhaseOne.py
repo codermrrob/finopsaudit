@@ -5,6 +5,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 from Configuration import AuditConfig, RegularExpressions, ResourcesPerDayJsonColumns
+from Configuration.AuditConfig import AuditReportColumns
 from Database import DataAggregator
 from DataManager import DataManager
 from pathlib import Path
@@ -21,7 +22,7 @@ class AuditPhaseOne:
         self.tenant = tenant
         self.year = year
         self.month = month
-        self.config_loader = ConfigLoader(self.settings)
+        self.config_loader = ConfigLoader()
         
         # Create DuckDBManager and use it for DataAggregator
         self.db_manager = DuckDBManager(output_base, tenant)
@@ -167,32 +168,36 @@ class AuditPhaseOne:
         residual_len = len(residual)
         mask_hits_total = sum(mask_hits.values())
 
-        row['masked_name'] = masked_name
-        row['residual_preview'] = residual
-        row['orig_len'] = orig_len
-        row['removed_chars'] = removed_chars
-        row['pct_removed'] = pct_removed
-        row['residual_len'] = residual_len
-        row['entropy_orig'] = self._calculate_shannon_entropy(original_name)
-        row['entropy_resid'] = self._calculate_shannon_entropy(residual)
-        row['mask_hits_total'] = mask_hits_total
-        for key, count in mask_hits.items():
-            row[f'mask_hits_{key.lower()}'] = count
+        row[AuditReportColumns.MASKED_NAME] = masked_name
+        row[AuditReportColumns.RESIDUAL_PREVIEW] = residual
+        row[AuditReportColumns.ORIG_LEN] = orig_len
+        row[AuditReportColumns.REMOVED_CHARS] = removed_chars
+        row[AuditReportColumns.PCT_REMOVED] = pct_removed
+        row[AuditReportColumns.RESIDUAL_LEN] = residual_len
+        row[AuditReportColumns.ENTROPY_ORIG] = self._calculate_shannon_entropy(original_name)
+        row[AuditReportColumns.ENTROPY_RESID] = self._calculate_shannon_entropy(residual)
+        row[AuditReportColumns.MASK_HITS_TOTAL] = mask_hits_total
+        row[AuditReportColumns.MASK_HITS_GUID] = mask_hits.get('GUID', 0)
+        row[AuditReportColumns.MASK_HITS_HEX] = mask_hits.get('HEX', 0)
+        row[AuditReportColumns.MASK_HITS_TECH] = mask_hits.get('TECH', 0)
+        row[AuditReportColumns.MASK_HITS_ENV] = mask_hits.get('ENV', 0)
+        row[AuditReportColumns.MASK_HITS_REG] = mask_hits.get('REG', 0)
+        row[AuditReportColumns.MASK_HITS_NUM] = mask_hits.get('NUM', 0)
 
         # --- 3. Flag Calculation ---
-        row['overstrip_flag'] = (pct_removed > self.settings.AUDIT_OVERSTRIP_PCT) or \
+        row[AuditReportColumns.OVERSTRIP_FLAG] = (pct_removed > self.settings.AUDIT_OVERSTRIP_PCT) or \
                                 (residual_len < self.settings.AUDIT_RESIDUAL_MIN_LEN)
         
         alpha_parts = re.findall(RegularExpressions.POTENTIAL_ENTITY_REGEX_PATTERN, residual)
-        row['acronym_only_residual'] = bool(alpha_parts) and all(self.settings.AUDIT_ACRONYM_MIN_LEN <= len(p) <= self.settings.AUDIT_ACRONYM_MAX_LEN for p in alpha_parts)
+        row[AuditReportColumns.ACRONYM_ONLY_RESIDUAL] = bool(alpha_parts) and all(self.settings.AUDIT_ACRONYM_MIN_LEN <= len(p) <= self.settings.AUDIT_ACRONYM_MAX_LEN for p in alpha_parts)
         
-        row['heavy_scaffold'] = (pct_removed >= self.settings.AUDIT_HEAVY_SCAFFOLD_PCT) or (mask_hits_total >= self.settings.AUDIT_HEAVY_SCAFFOLD_HITS)
-        row['is_glued'] = '-' not in original_name and '_' not in original_name
+        row[AuditReportColumns.HEAVY_SCAFFOLD] = (pct_removed >= self.settings.AUDIT_HEAVY_SCAFFOLD_PCT) or (mask_hits_total >= self.settings.AUDIT_HEAVY_SCAFFOLD_HITS)
+        row[AuditReportColumns.IS_GLUED] = '-' not in original_name and '_' not in original_name
 
         # --- 4. Embedded Detections (for glued names) ---
         embedded_env_list = []
         embedded_tech_list = []
-        if row['is_glued']:
+        if row[AuditReportColumns.IS_GLUED]:
             # Find embedded ENV terms
             name_lower = original_name.lower()
             embedded_env_list = sorted(list(set([term for term in self.env_terms if term in name_lower])))
@@ -201,9 +206,9 @@ class AuditPhaseOne:
             tech_digit_pattern = r'(' + '|'.join(re.escape(t) for t in self.tech_terms) + r')\d+'
             embedded_tech_list = sorted(list(set(re.findall(tech_digit_pattern, name_lower, re.IGNORECASE))))
 
-        row['embedded_env_list'] = embedded_env_list
-        row['embedded_tech_list'] = embedded_tech_list
-        row['env_conflict'] = len(embedded_env_list) >= self.settings.AUDIT_ENV_CONFLICT_MIN_COUNT
+        row[AuditReportColumns.EMBEDDED_ENV_LIST] = embedded_env_list
+        row[AuditReportColumns.EMBEDDED_TECH_LIST] = embedded_tech_list
+        row[AuditReportColumns.ENV_CONFLICT] = len(embedded_env_list) >= self.settings.AUDIT_ENV_CONFLICT_MIN_COUNT
 
         return row
 
@@ -224,7 +229,7 @@ class AuditPhaseOne:
         logger.info(f"Audit Phase 1 report saved to {output_path}")
 
         # Save the masked names for the agent
-        agent_input_df = processed_df[[ResourcesPerDayJsonColumns.RESOURCE_NAME, 'masked_name']]
+        agent_input_df = processed_df[[ResourcesPerDayJsonColumns.RESOURCE_NAME, AuditReportColumns.MASKED_NAME]]
         agent_filename = f"masked_names_for_agent.{self.year}_{self.month}.csv"
         agent_output_path = self.audit_path / agent_filename
         dm.write_csv(agent_input_df, agent_output_path)

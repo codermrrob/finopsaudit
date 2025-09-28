@@ -1,6 +1,6 @@
 from pathlib import Path
 from DataManager import DataManager
-from Configuration import AuditConfig
+from Configuration import AgentConfig, AuditConfig
 
 
 class AuditInitialiser:
@@ -33,6 +33,7 @@ class AuditInitialiser:
         self.DEFAULT_CONFIG_PATH = Path(__file__).parent / "DefaultTenantConfig"
         self.tenant_path = Path(self.output_base) / self.tenant
         self.tenant_config_path = self.tenant_path / f"{self.tenant}Config"
+        self.tenant_agent_path = self.tenant_path / AgentConfig.AGENT_OUTPUT_DIR
 
         self._initialise_tenant()
 
@@ -42,6 +43,11 @@ class AuditInitialiser:
         """
         print(f"Initialising tenant: {self.tenant}")
         print(f"Tenant config path: {self.tenant_config_path}")
+
+        # Create the agent output directory.
+        if not self.dm.fs.exists(self.tenant_agent_path):
+            print(f"Creating agent directory at: {self.tenant_agent_path}")
+            self.dm.fs.mkdirs(self.tenant_agent_path)
 
         # The copy_file method will create the destination directory if it doesn't exist.
         for config_file in self.CONFIG_FILES:

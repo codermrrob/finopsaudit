@@ -32,6 +32,10 @@ dependencies = [
     "duckdb>=1.4.0",
     "pyyaml>=6.0.2",
     "pandas>=2.3.2",
+    "agno >=2.0.11",
+    "google-genai >=1.39.1",
+    "jsonschema >=4.25.1",
+    "google-api-core >=2.19.0",
 ]
 
 [project.optional-dependencies]
