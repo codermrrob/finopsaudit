@@ -20,7 +20,7 @@ from .AuditConfig import (
     AuditReportColumns,
     ProtectSetColumns,
     GluedNamesColumns,
-    CorpusRollupColumns,
+    CorpusRollupColumns
 )
 
 # Import from agent configuration
@@ -28,6 +28,10 @@ from .AgentConfig import AgentConfig, ModelProvider, ModelConfig, ResponseSchema
 
 # Import from global configuration
 from .GlobalConfig import RegularExpressions
+
+from .EntityMergerConfig import EntityMergerConfig, SimilarityConfig
+
+from .AuditDashboardConfig import AuditDashboardConfig
 
 # You would also import from other config files when you create them
 # from .settings import AppSettings, settings
@@ -47,7 +51,7 @@ __all__ = [
     "ProtectSetColumns",
     "GluedNamesColumns",
     "CorpusRollupColumns",
-    
+    "AuditDashboardConfig",    
     # Agent constants
     "AgentConfig",
     "ModelProvider",
@@ -56,7 +60,10 @@ __all__ = [
     
     # Global constants
     "RegularExpressions",
-    
+
+    # Entity Merger constants
+    "EntityMergerConfig",
+    "SimilarityConfig",    
     # Add other exports as you create more config files
     # "AppSettings",
     # "settings",

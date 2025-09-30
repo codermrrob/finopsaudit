@@ -34,6 +34,7 @@ class AuditInitialiser:
         self.tenant_path = Path(self.output_base) / self.tenant
         self.tenant_config_path = self.tenant_path / f"{self.tenant}Config"
         self.tenant_agent_path = self.tenant_path / AgentConfig.AGENT_OUTPUT_DIR
+        self.tenant_entities_path = self.tenant_path / "entities"
 
         self._initialise_tenant()
 
@@ -44,10 +45,14 @@ class AuditInitialiser:
         print(f"Initialising tenant: {self.tenant}")
         print(f"Tenant config path: {self.tenant_config_path}")
 
-        # Create the agent output directory.
+        # Create the agent and entities output directories.
         if not self.dm.fs.exists(self.tenant_agent_path):
             print(f"Creating agent directory at: {self.tenant_agent_path}")
             self.dm.fs.mkdirs(self.tenant_agent_path)
+
+        if not self.dm.fs.exists(self.tenant_entities_path):
+            print(f"Creating entities directory at: {self.tenant_entities_path}")
+            self.dm.fs.mkdirs(self.tenant_entities_path)
 
         # The copy_file method will create the destination directory if it doesn't exist.
         for config_file in self.CONFIG_FILES:

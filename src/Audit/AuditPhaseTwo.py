@@ -413,33 +413,44 @@ class AuditPhaseTwo:
                     CorpusRollupColumns.TOP_REG_TOKENS: ''
                 }
                 
-                for col_name, col_key in {
-                    'pct_removed': AuditReportColumns.PCT_REMOVED,
-                    'residual_len': AuditReportColumns.RESIDUAL_LEN,
-                    'entropy_orig': AuditReportColumns.ENTROPY_ORIG,
-                    'entropy_resid': AuditReportColumns.ENTROPY_RESID
-                }.items():
-                    record[f'{col_name}_mean'] = scope_df[col_key].mean()
-                    record[f'{col_name}_median'] = scope_df[col_key].median()
-                record['pct_removed_p90'] = scope_df[AuditReportColumns.PCT_REMOVED].quantile(0.9)
-                record['residual_len_p10'] = scope_df[AuditReportColumns.RESIDUAL_LEN].quantile(0.1)
+                # --- Base Metrics ---
+                metrics_to_calculate = {
+                    CorpusRollupColumns.PCT_REMOVED_MEAN: (AuditReportColumns.PCT_REMOVED, 'mean'),
+                    CorpusRollupColumns.PCT_REMOVED_MEDIAN: (AuditReportColumns.PCT_REMOVED, 'median'),
+                    CorpusRollupColumns.PCT_REMOVED_P90: (AuditReportColumns.PCT_REMOVED, lambda s: s.quantile(0.9)),
+                    CorpusRollupColumns.RESIDUAL_LEN_MEAN: (AuditReportColumns.RESIDUAL_LEN, 'mean'),
+                    CorpusRollupColumns.RESIDUAL_LEN_MEDIAN: (AuditReportColumns.RESIDUAL_LEN, 'median'),
+                    CorpusRollupColumns.RESIDUAL_LEN_P10: (AuditReportColumns.RESIDUAL_LEN, lambda s: s.quantile(0.1)),
+                    CorpusRollupColumns.ENTROPY_ORIG_MEAN: (AuditReportColumns.ENTROPY_ORIG, 'mean'),
+                    CorpusRollupColumns.ENTROPY_ORIG_MEDIAN: (AuditReportColumns.ENTROPY_ORIG, 'median'),
+                    CorpusRollupColumns.ENTROPY_RESID_MEAN: (AuditReportColumns.ENTROPY_RESID, 'mean'),
+                    CorpusRollupColumns.ENTROPY_RESID_MEDIAN: (AuditReportColumns.ENTROPY_RESID, 'median'),
+                }
+                for target_col, (source_col, agg_func) in metrics_to_calculate.items():
+                    if isinstance(agg_func, str):
+                        record[target_col] = scope_df[source_col].agg(agg_func)
+                    else:
+                        record[target_col] = agg_func(scope_df[source_col])
 
-                for flag_name, flag_key in {
-                    'overstrip_flag': AuditReportColumns.OVERSTRIP_FLAG,
-                    'acronym_only_residual': AuditReportColumns.ACRONYM_ONLY_RESIDUAL,
-                    'heavy_scaffold': AuditReportColumns.HEAVY_SCAFFOLD,
-                    'is_glued': AuditReportColumns.IS_GLUED,
-                    'env_conflict': AuditReportColumns.ENV_CONFLICT
-                }.items():
-                    record[f'{flag_name}_rate'] = scope_df[flag_key].mean()
+                # --- Flag-Based Rates ---
+                flag_rate_columns = {
+                    CorpusRollupColumns.OVERSTRIP_FLAG_RATE: AuditReportColumns.OVERSTRIP_FLAG,
+                    CorpusRollupColumns.IS_GLUED_RATE: AuditReportColumns.IS_GLUED,
+                    CorpusRollupColumns.ACRONYM_ONLY_RESIDUAL_RATE: AuditReportColumns.ACRONYM_ONLY_RESIDUAL,
+                    CorpusRollupColumns.HEAVY_SCAFFOLD_RATE: AuditReportColumns.HEAVY_SCAFFOLD,
+                    CorpusRollupColumns.ENV_CONFLICT_RATE: AuditReportColumns.ENV_CONFLICT,
+                }
+                for target_col, source_col in flag_rate_columns.items():
+                    record[target_col] = scope_df[source_col].mean()
 
+                # --- Glued Name Specific Metrics ---
                 glued_rows = scope_df[scope_df[AuditReportColumns.IS_GLUED] == True]
                 if not glued_rows.empty:
-                    record['glued_explained_rate'] = glued_rows[GluedNamesColumns.GLUED_EXPLAINED].mean()
-                    record['embedded_env_rate'] = glued_rows[AuditReportColumns.EMBEDDED_ENV_LIST].apply(lambda x: len(x) > 0).mean()
+                    record[CorpusRollupColumns.GLUED_EXPLAINED_RATE] = glued_rows[GluedNamesColumns.GLUED_EXPLAINED].mean()
+                    record[CorpusRollupColumns.EMBEDDED_ENV_RATE] = glued_rows[AuditReportColumns.EMBEDDED_ENV_LIST].apply(lambda x: len(x) > 0).mean()
                 else:
-                    record['glued_explained_rate'] = np.nan
-                    record['embedded_env_rate'] = np.nan
+                    record[CorpusRollupColumns.GLUED_EXPLAINED_RATE] = np.nan
+                    record[CorpusRollupColumns.EMBEDDED_ENV_RATE] = np.nan
 
                 # Top token analysis
                 for term_type, terms in self.exclusion_sets.items():

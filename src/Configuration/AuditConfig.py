@@ -74,22 +74,24 @@ class AuditConfig:
     AUDIT_ACRONYM_MAX_LEN: int = 4
     """Maximum length for a residual part to be considered an acronym."""
     AUDIT_HEAVY_SCAFFOLD_PCT: float = 0.5
-    """Percentage of characters removed to flag as heavy scaffold."""
     AUDIT_HEAVY_SCAFFOLD_HITS: int = 3
     """Number of mask hits to flag as heavy scaffold."""
     AUDIT_ENV_CONFLICT_MIN_COUNT: int = 2
     """Minimum number of embedded environment terms to flag a conflict."""
 
-    AUDIT_TOP_TOKENS_COUNT: int = 10
-    """Number of top tokens to include in the corpus summary."""
+    # --- Phase 2 --- #
+    AUDIT_TOP_TOKENS_COUNT: int = 5
+    """Number of top tokens to include in the corpus readiness summary."""
+
+    MAX_ENTITY_CANDIDATES: int = 5000
+    """The maximum number of entity candidates to process before halting the audit workflow."""
 
     KNOWN_ENTITIES_YAML_KEY: str = 'known_entities'
     """The top-level key in 'known_entities.yaml' under which the list of entity definitions is found.
        Affects: Loading of known business/technical entities for name analysis."""
 
     DUCKDB_VIEW_NAME: str = "resources_per_day_json"
-    """Name of the specific view within DuckDB (see DUCKDB_PATH) that serves as the primary data source for analysis.
-       This view should provide resource details, costs, and tags."""
+    """Name of the specific view within DuckDB (see DUCKDB_PATH) that serves as the primary data source for analysis."""
 
     TENANT_CONFIG_EXCLUSIONS_PATH: str = "exclusions.txt"
     """Path to the exclusions.yaml file for the tenant."""
@@ -156,6 +158,23 @@ class CorpusRollupColumns:
     SCOPE_TYPE = "ScopeType"
     SCOPE_VALUE = "ScopeValue"
     N_RESOURCES = "ResourceCount"
+    OVERSTRIP_FLAG_RATE = "OverstripFlagRate"
+    GLUED_EXPLAINED_RATE = "GluedExplainedRate"
+    IS_GLUED_RATE = "IsGluedRate"
+    ACRONYM_ONLY_RESIDUAL_RATE = "AcronymOnlyResidualRate"
+    HEAVY_SCAFFOLD_RATE = "HeavyScaffoldRate"
+    ENV_CONFLICT_RATE = "EnvConflictRate"
+    EMBEDDED_ENV_RATE = "EmbeddedEnvRate"
+    PCT_REMOVED_MEAN = "PctRemovedMean"
+    PCT_REMOVED_MEDIAN = "PctRemovedMedian"
+    PCT_REMOVED_P90 = "PctRemovedP90"
+    RESIDUAL_LEN_MEAN = "ResidualLenMean"
+    RESIDUAL_LEN_MEDIAN = "ResidualLenMedian"
+    RESIDUAL_LEN_P10 = "ResidualLenP10"
+    ENTROPY_ORIG_MEAN = "EntropyOrigMean"
+    ENTROPY_ORIG_MEDIAN = "EntropyOrigMedian"
+    ENTROPY_RESID_MEAN = "EntropyResidMean"
+    ENTROPY_RESID_MEDIAN = "EntropyResidMedian"
     TOP_TECH_TOKENS = "TopTechTokens"
     TOP_ENV_TOKENS = "TopEnvTokens"
     TOP_REG_TOKENS = "TopRegTokens"

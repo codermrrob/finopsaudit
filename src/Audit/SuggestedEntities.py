@@ -5,12 +5,13 @@ from pathlib import Path
 import logging
 
 logger = logging.getLogger(__name__)
-from Configuration import ResourcesPerDayJsonColumns, ProtectSetColumns
+from Configuration import AuditConfig, ResourcesPerDayJsonColumns, ProtectSetColumns
 
 class SuggestedEntities:
     """Generates a suggested entities YAML file from audit data."""
 
     def __init__(self, phase_one_df: pd.DataFrame, protect_set_df: pd.DataFrame, output_dir: Path, year: int, month: str):
+        self.settings = AuditConfig()
         self.phase_one_df = phase_one_df
         self.protect_set_df = protect_set_df
         self.output_dir = output_dir
@@ -25,8 +26,14 @@ class SuggestedEntities:
             return
 
         entities = []
-        for _, row in self.protect_set_df.iterrows():
-            chunk = row[ProtectSetColumns.CHUNK]
+        for i, row in enumerate(self.protect_set_df.iterrows()):
+            if i >= self.settings.MAX_ENTITY_CANDIDATES:
+                error_msg = f"Entity candidate count exceeded the configured threshold of {self.settings.MAX_ENTITY_CANDIDATES}. Halting process."
+                logger.critical(f"{error_msg} This scale suggests an enterprise-level operation or significant naming inconsistency, which falls outside the target scope of this automated analysis.")
+                raise ValueError(error_msg)
+
+            _, row_data = row
+            chunk = row_data[ProtectSetColumns.CHUNK]
             found_in_chunks = self.phase_one_df[
                 self.phase_one_df[ResourcesPerDayJsonColumns.RESOURCE_NAME].str.contains(chunk, case=False, na=False)
             ][ResourcesPerDayJsonColumns.RESOURCE_NAME].unique().tolist()
